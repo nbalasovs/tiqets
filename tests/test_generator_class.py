@@ -45,3 +45,21 @@ class TestGenerator(unittest.TestCase):
 
         self.assertTrue(correct_output.equals(output))
         self.assertEqual([], empty)
+
+    def test_check_unused_exists(self):
+        gt = Generator(DataFrame(), DataFrame(), self.path)
+        output = gt.check_unused({1, 2, 3}, {1, 2})
+        correct_output = [3]
+        self.assertEqual(correct_output, output)
+
+    def test_check_unused_all_used(self):
+        gt = Generator(DataFrame(), DataFrame(), self.path)
+        output = gt.check_unused({1, 2, 3}, {1, 2, 3})
+        correct_output = []
+        self.assertEqual(correct_output, output)
+
+    def test_check_unused_first_element_empty(self):
+        gt = Generator(DataFrame(), DataFrame(), self.path)
+        output = gt.check_unused(set(), {1, 2, 3})
+        correct_output = []
+        self.assertEqual(correct_output, output)
