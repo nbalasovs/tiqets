@@ -50,6 +50,26 @@ class Generator:
         """
         return list(s1.difference(s2))
 
+    @staticmethod
+    def find_most_valuable_customers(data: DataFrame, n: int) -> DataFrame:
+        """
+        Finds n top valuable customers
+        :param data: original dataframe
+        :param n: number of entries that need to be retrieved
+        :return: dataframe containing top n valuable customers
+        """
+        data_dict = {}
+        for _, item in data.iterrows():
+            barcodes = data[data["customer_id"] == item["customer_id"]]["barcodes"].to_list()
+            if item["customer_id"] not in data_dict:
+                data_dict[item["customer_id"]] = len(flatten(barcodes))
+
+        data = [[k, v] for k, v in data_dict.items()]
+        df = DataFrame(data, columns=["customer_id", "count"])
+        sorted_df = df.sort_values(["count"], ascending=False)
+
+        return sorted_df.head(n)
+
 
 def main(ns: Namespace) -> None:
     """
@@ -76,3 +96,7 @@ def main(ns: Namespace) -> None:
     unused_barcodes = gt.check_unused(available_barcodes, valid_barcodes)
 
     print(f"number of unused barcodes: {len(unused_barcodes)}", file=sys.stdout)
+
+    mvp_df = gt.find_most_valuable_customers(df, 5)
+    for _, customer in mvp_df.iterrows():
+        print(f"{customer['customer_id']},{customer['count']}", file=sys.stdout)

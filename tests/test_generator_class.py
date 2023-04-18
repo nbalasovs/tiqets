@@ -63,3 +63,27 @@ class TestGenerator(unittest.TestCase):
         output = gt.check_unused(set(), {1, 2, 3})
         correct_output = []
         self.assertEqual(correct_output, output)
+
+    def test_find_most_valuable_customers_more_than_one_count(self):
+        df = DataFrame([[10, 1, [11111111111]], [11, 2, [11111111112]]],
+                       columns=["customer_id", "order_id", "barcodes"])
+        gt = Generator(DataFrame(), DataFrame(), self.path)
+        output = gt.find_most_valuable_customers(df, 5)
+        correct_df = DataFrame([[10, 1], [11, 1]], columns=["customer_id", "count"])
+        self.assertTrue(correct_df.equals(output))
+
+    def test_find_most_valuable_customers_less_than_output_count(self):
+        df = DataFrame([[10, 1, [11111111111]], [11, 2, [11111111112]]],
+                       columns=["customer_id", "order_id", "barcodes"])
+        gt = Generator(DataFrame(), DataFrame(), self.path)
+        output = gt.find_most_valuable_customers(df, 1)
+        correct_df = DataFrame([[10, 1]], columns=["customer_id", "count"])
+        self.assertTrue(correct_df.equals(output))
+
+    def test_find_most_valuable_customers(self):
+        df = DataFrame([[10, 1, [11111111111, 11111111113]], [11, 2, [11111111112]]],
+                       columns=["customer_id", "order_id", "barcodes"])
+        gt = Generator(DataFrame(), DataFrame(), self.path)
+        output = gt.find_most_valuable_customers(df, 5)
+        correct_df = DataFrame([[10, 2], [11, 1]], columns=["customer_id", "count"])
+        self.assertTrue(correct_df.equals(output))
