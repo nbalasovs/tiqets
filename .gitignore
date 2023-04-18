@@ -8,6 +8,11 @@ __pycache__/
 
 .DS_Store
 
+# data folder
+data/*.csv
+!data/barcode.csv
+!data/orders.csv
+
 # Distribution / packaging
 .Python
 build/

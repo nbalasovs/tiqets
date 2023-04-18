@@ -40,6 +40,9 @@ class Generator:
 
         return DataFrame(data, columns=["customer_id", "order_id", "barcodes"]), list(unused_order_ids)
 
+    def produce_csv_file(self, data: DataFrame):
+        data.to_csv(self.path, index=False)
+
     @staticmethod
     def check_unused(s1: set, s2: set) -> list:
         """
@@ -100,3 +103,6 @@ def main(ns: Namespace) -> None:
     mvp_df = gt.find_most_valuable_customers(df, 5)
     for _, customer in mvp_df.iterrows():
         print(f"{customer['customer_id']},{customer['count']}", file=sys.stdout)
+
+    gt.produce_csv_file(df)
+    

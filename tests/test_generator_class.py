@@ -1,4 +1,5 @@
 import unittest
+import os
 
 from pandas import DataFrame
 from generator.generator import Generator
@@ -87,3 +88,11 @@ class TestGenerator(unittest.TestCase):
         output = gt.find_most_valuable_customers(df, 5)
         correct_df = DataFrame([[10, 2], [11, 1]], columns=["customer_id", "count"])
         self.assertTrue(correct_df.equals(output))
+
+    def test_produce_csv_file(self):
+        df = DataFrame([[1, 2], [3, 4]], columns=["one", "two"])
+        gt = Generator(DataFrame(), DataFrame(), self.path)
+        gt.produce_csv_file(df)
+        self.assertTrue(os.path.isfile(self.path))
+        # remove test file after a test
+        os.remove(self.path)
